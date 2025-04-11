@@ -8,8 +8,8 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class CreditoTopic {
 
-//    @Bean
-//    public NewTopic creditoTopic() {
-//        return TopicBuilder.name("topico-creditos").partitions(1).replicas(1).build();
-//    }
+    @Bean
+    public NewTopic criarTopic() {
+        return TopicBuilder.name("topico-creditos").partitions(1).replicas(1).build();
+    }
 }

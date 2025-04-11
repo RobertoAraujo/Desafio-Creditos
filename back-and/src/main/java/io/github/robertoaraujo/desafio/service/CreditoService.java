@@ -21,11 +21,19 @@ public class CreditoService {
     }
 
     public Page<Credito> findAll(Pageable pageable) {
+        if (pageable.getPageSize() > 100) {
+            throw new IllegalArgumentException("O tamanho da página não pode ser maior que 100");
+        }
+        if (pageable.getPageNumber() < 0) {
+            throw new IllegalArgumentException("O número da página não pode ser menor que 0");
+        }
+        if (pageable.getPageSize() == 0) {
+            throw new IllegalArgumentException("O tamanho da página não pode ser 0");
+        }
         return creditoRepository.findAllBy(pageable);
     }
 
-
-    public List<Credito> criarCredito(CreditoDto credito) {
+    public Credito criarCredito(CreditoDto credito) {
         Credito novoCredito = new Credito();
         novoCredito.setNumeroCredito(credito.getNumeroCredito());
         novoCredito.setNumeroNfse(credito.getNumeroNfse());
@@ -36,10 +44,10 @@ public class CreditoService {
         novoCredito.setAliquota(credito.getAliquota());
         novoCredito.setValorFaturado(credito.getValorFaturado());
         novoCredito.setValorDeducao(credito.getValorDeducao());
-        novoCredito.setBaseCalculo(credito.getBaseCalculo());
+        novoCredito.setBaseCalculo(credito.getBaseCalculo(),
+        credito.getUsuarioId() != null ? credito.getUsuarioId() : null);
 
-        creditoRepository.save(novoCredito);
-        return creditoRepository.findAll();
+        return creditoRepository.save(novoCredito);
     }
 
     public List<Credito> findAllNumeroNfse(String numeroNfse) {

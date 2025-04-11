@@ -112,7 +112,7 @@ public class Credito {
         return baseCalculo;
     }
 
-    public void setBaseCalculo(BigDecimal baseCalculo) {
+    public void setBaseCalculo(BigDecimal baseCalculo, Long aLong) {
         this.baseCalculo = baseCalculo;
     }
 
