@@ -1,37 +1,107 @@
 version: '3.8'
 
 services:
+  # Banco de dados PostgreSQL 16
   postgres:
-    container_name: pg-fiesc
-    image: postgres
+    container_name: pg-postgres
+    image: postgres:16
     restart: always
     environment:
-      POSTGRES_PASSWORD: 'pgpass'
+      POSTGRES_DB: banco_desafio  # Corrigido para match com a configuração do Spring
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     volumes:
+      - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - 5432:5432
+      - "5432:5432"
+    networks:
+      - credito-network  # Mantido conforme definição no final
 
+  # Serviço Zookeeper
   zookeeper:
-    container_name: zookeeper-fiesc
+    container_name: zookeeper
     image: confluentinc/cp-zookeeper:7.5.0
     restart: always
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - 2181:2181
+      - "2181:2181"
+    networks:
+      - credito-network
 
+  # Serviço Kafka
   kafka:
-    container_name: kafka-fiesc
+    container_name: kafka
     image: confluentinc/cp-kafka:7.5.0
     restart: always
     depends_on:
       - zookeeper
     ports:
-      - 9092:9092
+      - "9092:9092"
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper-fiesc:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+    networks:
+      - credito-network
+
+  # Backend Java 8
+  backend:
+    container_name: backend
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - postgres
+      - kafka
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/banco_desafio
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
+    networks:
+      - credito-network
+
+  # Frontend Angular 10 com Apache
+  frontend:
+    container_name: frontend
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+    networks:
+      - credito-network
+
+  # Servidor Apache
+  apache:
+    container_name: apache
+    image: httpd:2.4
+    restart: always
+    ports:
+      - "8081:80"
+    volumes:
+      - ./apache/html:/usr/local/apache2/htdocs
+    networks:
+      - credito-network
+
+# Redes e volumes
+networks:
+  credito-network:  # Corrigido para manter consistência com o nome usado nos serviços
+    driver: bridge
+
+volumes:
+  postgres_data:
