@@ -1,0 +1,16 @@
+<app-navbar *ngIf="showLayout"></app-navbar>
+<div id="layoutSidenav" *ngIf="showLayout">
+    <app-sidebar *ngIf="showLayout"></app-sidebar>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+                <router-outlet></router-outlet>
+            </div>
+        </main>
+        <app-footer *ngIf="showLayout"></app-footer>
+    </div>
+</div>
+
+<ng-container *ngIf="!showLayout">
+    <router-outlet></router-outlet>
+</ng-container>

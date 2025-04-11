@@ -1,0 +1,61 @@
+<h1 class="mt-4">Cadastro de Usuários</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item active">Usuários</li>
+</ol>
+<div class="container-full">
+    <button class="btn btn-secondary" onclick="window.location.href='/usuarios-list'">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </button>
+    <br><br>
+    <form #usuarioForm="ngForm" (ngSubmit)="cadastroUsuario()">
+        <div class="alert alert-danger" role="alert" *ngFor="let erro of errors">
+            {{ erro }}
+        </div>
+        <div class="alert alert-success" role="alert" *ngIf="success == true">
+            <strong>Usuário cadastrado com sucesso!</strong> {{ success }}
+        </div>
+        <div class="row">
+            <!-- ID Input (disabled) -->
+            <div class="col-md-6" *ngIf="usuario.id">
+                <div class="form-group">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" [ngModel]="usuario.id" name="id" disabled>
+                </div>
+            </div>
+
+            <!-- Nome Input -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="nome">Nome</label>
+                    <input type="text" class="form-control" id="nome" [(ngModel)]="usuario.nome" name="nome"
+                        placeholder="Digite seu nome">
+                </div>
+            </div>
+
+            <!-- Email Input -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" [(ngModel)]="usuario.email" name="email"
+                        placeholder="Digite seu email">
+                </div>
+            </div>
+
+            <!-- Senha Input -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" class="form-control" id="senha" [(ngModel)]="usuario.senha" name="senha"
+                        placeholder="Digite sua senha">
+                </div>
+            </div>
+
+            <!-- Botão de Envio -->
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Enviar
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

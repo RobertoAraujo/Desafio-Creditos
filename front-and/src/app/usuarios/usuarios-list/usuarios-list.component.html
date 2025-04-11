@@ -1,0 +1,73 @@
+<h1 class="mt-4">lista de Usuários</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item active">Usuários</li>
+</ol>
+<div class="container-fluid">
+    <br>
+    <div class="alert alert-danger" role="alert" *ngFor="let erro of errors">
+        {{ erro }}
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <button class="btn btn-success" onclick="window.location.href='/usuarios-form'">
+            <i class="fas fa-plus"></i> Adicionar
+        </button>
+        <div class="row mb-3 w-50">
+            <div class="col-md-8">
+                <input type="text" class="form-control" id="searchInput" placeholder="Digite o nome do Usuário">
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary w-100" onclick="searchClient()">Pesquisar</button>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <!-- Tabela de Usuários -->
+    <table class="table table-condensed table-hover">
+        <thead class="thead-dark" style="background-color: black; color: white;">
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Senha</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="usuarioTableBody">
+            <tr *ngIf="usuarios.length === 0">
+                <td colspan="5" style="text-align: center;">Nenhum registro encontrado</td>
+            </tr>
+            <tr *ngFor="let usuario of usuarios">
+                <td>{{usuario.id}}</td>
+                <td>{{usuario.nome ? usuario.nome : 'N/A'}}</td>
+                <td>{{usuario.email ? usuario.email : 'N/A'}}</td>
+                <td>{{ usuario.senha ? '•'.repeat(usuario.senha.length) : 'N/A' }}</td>
+                <td style="width: 150px;">
+                    <button class="btn btn-warning btn-sm" style="width: 40px;" (click)="updateUsuario(usuario.id)" >
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    &nbsp;
+                    <button class="btn btn-danger btn-sm" style="width: 40px;" (click)="deleteUsuario(usuario.id)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <nav aria-label="Navegação de página exemplo" class="d-flex justify-content-center mt-4">
+        <ul class="pagination">
+            <li class="page-item" [class.disabled]="currentPage === 0">
+                <a class="page-link" href="#" (click)="changePage(currentPage - 1)">Anterior</a>
+            </li>
+            <li *ngFor="let page of pages" class="page-item" [class.active]="currentPage === page">
+                <a class="page-link" href="/usuarios-list" (click)="changePage(page)">{{ page + 1 }}</a>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+                <a class="page-link" href="#" (click)="changePage(currentPage + 1)">Próximo</a>
+            </li>
+        </ul>
+    </nav>
+
+</div>

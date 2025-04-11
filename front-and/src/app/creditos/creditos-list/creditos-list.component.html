@@ -1,0 +1,85 @@
+<h1 class="mt-4">Lista de Créditos</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item active">Créditos</li>
+</ol>
+<div class="container-fluid px-0 px-md-3">
+    <div class="alert alert-danger" role="alert" *ngFor="let erro of errors">
+        {{ erro }}
+    </div>
+
+    <!-- Barra de Ações e Pesquisa - Ajustada para mobile -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center mb-3 gap-2">
+        <button class="btn btn-success" >
+            <i class="fas fa-plus"></i> Adicionar
+        </button>
+        
+        <div class="d-flex flex-grow-1 flex-md-grow-0 ms-md-2" style="min-width: 250px; max-width: 400px;">
+            <input type="text" class="form-control" id="searchInput" 
+                   placeholder="Digite o número NFSe"
+                   [(ngModel)]="searchTerm" (input)="onSearchInput($event)">
+        </div>
+    </div>
+
+    <!-- Tabela com scroll horizontal em mobile -->
+    <div class="table-responsive">
+        <table class="table table-condensed table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nº Crédito</th>
+                    <th>Nº NFSe</th>
+                    <th>Data Constituição</th>
+                    <th>Valor ISSQN</th>
+                    <th>Tipo Crédito</th>
+                    <th>Simples Nacional</th>
+                    <th>Alíquota</th>
+                    <th>Valor Faturado</th>
+                    <th>Valor Dedução</th>
+                    <th>Base Cálculo</th>
+                    <th class="text-nowrap">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="filteredCreditos.length === 0">
+                    <td colspan="12" class="text-center">Nenhum registro encontrado</td>
+                </tr>
+                <tr *ngFor="let credito of filteredCreditos">
+                    <td>{{credito.id}}</td>
+                    <td>{{credito.numeroCredito || 'N/A'}}</td>
+                    <td>{{credito.numeroNfse || 'N/A'}}</td>
+                    <td>{{credito.dataConstituicao || 'N/A'}}</td>
+                    <td>{{credito.valorIssqn || 'N/A'}}</td>
+                    <td>{{credito.tipoCredito || 'N/A'}}</td>
+                    <td>{{credito.simplesNacional !== undefined ? (credito.simplesNacional ? 'Sim' : 'Não') : 'N/A'}}</td>
+                    <td>{{credito.aliquota || 'N/A'}}</td>
+                    <td>{{credito.valorFaturado || 'N/A'}}</td>
+                    <td>{{credito.valorDeducao || 'N/A'}}</td>
+                    <td>{{credito.baseCalculo || 'N/A'}}</td>
+                    <td class="text-nowrap">
+                        <button class="btn btn-warning btn-sm me-1">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginação -->
+    <nav aria-label="Navegação de página exemplo" class="d-flex justify-content-center mt-4">
+        <ul class="pagination">
+            <li class="page-item" [class.disabled]="currentPage === 0">
+                <a class="page-link" href="#" (click)="changePage(currentPage - 1)">Anterior</a>
+            </li>
+            <li *ngFor="let page of pages" class="page-item" [class.active]="currentPage === page">
+                <a class="page-link" href="/creditos-list" (click)="changePage(page)">{{ page + 1 }}</a>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+                <a class="page-link" href="#" (click)="changePage(currentPage + 1)">Próximo</a>
+            </li>
+        </ul>
+    </nav>
+</div>
