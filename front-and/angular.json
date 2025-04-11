@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "fronte-cliente": {
+    "fronte-credito": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/fronte-cliente",
+            "outputPath": "dist/fronte-credito",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -66,18 +66,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "fronte-cliente:build"
+            "browserTarget": "fronte-credito:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "fronte-cliente:build:production"
+              "browserTarget": "fronte-credito:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "fronte-cliente:build"
+            "browserTarget": "fronte-credito:build"
           }
         },
         "test": {
@@ -114,18 +114,18 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "fronte-cliente:serve"
+            "devServerTarget": "fronte-credito:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "fronte-cliente:serve:production"
+              "devServerTarget": "fronte-credito:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "fronte-cliente",
+  "defaultProject": "fronte-credito",
   "cli": {
     "analytics": false
   }
