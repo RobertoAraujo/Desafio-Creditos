@@ -3,6 +3,7 @@ package io.github.robertoaraujo.desafio.service;
 import io.github.robertoaraujo.desafio.infra.dto.CreditoDto;
 import io.github.robertoaraujo.desafio.infra.model.Credito;
 import io.github.robertoaraujo.desafio.infra.repository.CreditoRepository;
+import io.github.robertoaraujo.desafio.infra.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +16,12 @@ public class CreditoService {
 
     private final CreditoRepository creditoRepository;
 
+    private final UsuarioRepository usuarioRepository;
+
     @Autowired
-    public CreditoService(CreditoRepository creditoRepository) {
+    public CreditoService(CreditoRepository creditoRepository, UsuarioRepository usuarioRepository) {
         this.creditoRepository = creditoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     public Page<Credito> findAll(Pageable pageable) {
@@ -44,8 +48,8 @@ public class CreditoService {
         novoCredito.setAliquota(credito.getAliquota());
         novoCredito.setValorFaturado(credito.getValorFaturado());
         novoCredito.setValorDeducao(credito.getValorDeducao());
-        novoCredito.setBaseCalculo(credito.getBaseCalculo(),
-        credito.getUsuarioId() != null ? credito.getUsuarioId() : null);
+        novoCredito.setBaseCalculo(credito.getBaseCalculo());
+        novoCredito.setUsuario(usuarioRepository.getReferenceById(credito.getUsuarioId()));
 
         return creditoRepository.save(novoCredito);
     }

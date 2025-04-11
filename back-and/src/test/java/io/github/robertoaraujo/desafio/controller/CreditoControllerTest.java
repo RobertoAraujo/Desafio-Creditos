@@ -1,29 +1,34 @@
 package io.github.robertoaraujo.desafio.controller;
 
-import io.github.robertoaraujo.desafio.infra.dto.CreditoDto;
 import io.github.robertoaraujo.desafio.infra.model.Credito;
-import io.github.robertoaraujo.desafio.infra.model.Usuario;
 import io.github.robertoaraujo.desafio.service.CreditoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+
+
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class CreditoControllerTest {
+@AutoConfigureMockMvc
+public class CreditoControllerTest  {
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @MockBean
-    private CreditoService mockCreditoService;
+    private CreditoService creditoService;
 
     private Credito credito1;
     private Credito credito2;
@@ -41,26 +46,27 @@ public class CreditoControllerTest {
     }
 
     @Test
-    void buscaNumeroNfesRetornaLista() {
+    void deveRetornarListaDeCreditosPorNumeroNfse() throws Exception {
         List<Credito> listaSimulada = Arrays.asList(credito1, credito2);
 
-        when(mockCreditoService.findAllNumeroNfse(numeroNfes)).thenReturn(listaSimulada);
+        when(creditoService.findAllNumeroNfse(numeroNfes)).thenReturn(listaSimulada);
 
-        List<Credito> resultado = mockCreditoService.findAllNumeroNfse(numeroNfes);
-
-        // Verificações
-        assertNotNull(resultado);
-        assertEquals(2, resultado.size());
-        assertEquals(numeroNfes, resultado.get(0).getNumeroNfse());
+        mockMvc.perform(get("/api/creditos/" + numeroNfes)) // Ajuste a URL conforme seu endpoint real
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].numeroNfse").value(numeroNfes));
     }
 
     @Test
-    void buscaNumeroNfesFalha() {
+    void deveRetornarCreditoUnicoPorNumeroNfse() throws Exception {
+        String numeroNfse = "123456789";
+        Credito credito = new Credito();
+        credito.setNumeroNfse(numeroNfse);
 
-    }
+        when(creditoService.findByNumeroNfse(numeroNfse)).thenReturn(credito);
 
-    @Test
-    void buscaNumeroNfesSemNfe() {
-
+        mockMvc.perform(get("/api/creditos/credito/" + numeroNfse))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.numeroNfse").value(numeroNfse));
     }
 }

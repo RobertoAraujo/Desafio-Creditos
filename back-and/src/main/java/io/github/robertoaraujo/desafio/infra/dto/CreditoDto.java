@@ -2,7 +2,6 @@ package io.github.robertoaraujo.desafio.infra.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.github.robertoaraujo.desafio.infra.model.Credito;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -136,6 +135,7 @@ public class CreditoDto {
     public Long getUsuarioId() {
         return usuarioId;
     }
+
     public void setUsuarioId(Long usuarioId) {
         this.usuarioId = usuarioId;
     }
