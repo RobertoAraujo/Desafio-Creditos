@@ -13,7 +13,7 @@ A API deve fornecer informações essenciais como:
 - Entre outros atributos relevantes
 
 Além disso, é necessário o desenvolvimento de um front-end em Angular para consumir essa API e exibir os dados ao usuário de forma clara e acessível.
-1. **Coloque cada README.md em sua respectiva pasta**:
+1. **Coloquei cada README.md em sua respectiva pasta**:
    - `back-end/README.md`
    - `front-end/README.md`
 
